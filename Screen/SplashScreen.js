@@ -26,14 +26,11 @@ const SplashScreen = ({ navigation }) => {
       AsyncStorage.clear();
 
       AsyncStorage.getItem('id_token').then((value) =>
-        // navigation.replace(
-        //   value === null ? 'Auth' : 'DrawerNavigationRoutes'
-        // ),
         navigation.replace(
-          'DrawerNavigationRoutes'
+          value === null ? 'Auth' : 'DrawerNavigationRoutes'
         ),
       );
-    }, 5000);
+    }, 10);
   }, []);
 
   return (
