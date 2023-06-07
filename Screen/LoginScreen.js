@@ -1,7 +1,3 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
-
-// Import React and Component
 import React, { useState, createRef } from 'react';
 import {
   StyleSheet,
@@ -21,6 +17,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from './Components/Loader';
 import DrawerNavigatorRoutes from './DrawerNavigationRoutes';
 import { environment } from '../environments/environment';
+import jwt_decode from "jwt-decode";
+
 
 const LoginScreen = ({ navigation }) => {
   const [userEmail, setUserEmail] = useState('');
@@ -64,7 +62,7 @@ const LoginScreen = ({ navigation }) => {
         setLoading(false);
         if (responseJson.access_token) {
           AsyncStorage.setItem('id_token', responseJson.access_token);
-          navigation.replace('DrawerNavigationRoutes');
+          navigation.replace('DrawerNavigationRoutes',jwt_decode(responseJson.access_token).scopes[0]);
         } else {
           setErrortext(responseJson.message);
           console.error('Please check your email id or password');

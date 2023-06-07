@@ -8,7 +8,6 @@ import {
   View,
   Modal,
   Alert,
-  TouchableOpacity
 } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -19,7 +18,7 @@ import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import { environment } from '../../environments/environment';
 
 
-const TutoriasScreen = ({ navigation, route }) => {
+const TutoriasDisponiblesScreen = ({ navigation, route }) => {
 
 
   const [currentTutoria, setCurrentTutoria] = useState(null);
@@ -28,27 +27,13 @@ const TutoriasScreen = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
 
-  if (route.params && route.params.tutoria) {
-    if (route.params.tutoria.created) {
-      tutorias.push(route.params.tutoria)
-      setTutorias(tutorias);
-    } else {
-      setTutorias(tutorias.map(t => {
-        let id = route.params.tutoria.id;
-        if (t.id === id) {
-          t.nombre = route.params.tutoria.nombre;
-        }
-        return t;
-      }));
-    }
-    route.params = null;
-  }
 
-  const deleteTutoria = (id) => {
+
+  const suscribeTutoria = (id) => {
     setModalVisible(false);
     Alert.alert(
-      'Eliminar',
-      'Estas seguro de eliminar la tutoria?',
+      'Inscripción',
+      'Estas seguro de iscribirte a la tutoria?',
       [
         {
           text: 'Cancelar',
@@ -57,12 +42,12 @@ const TutoriasScreen = ({ navigation, route }) => {
           },
         },
         {
-          text: 'Eliminar',
+          text: 'Incribirse',
           onPress: async () => {
             setLoading(true);
             await AsyncStorage.getItem('id_token').then((val) => token = val);
-            fetch(`${environment.URL}/api/tutorias/${id}`, {
-              method: 'DELETE',
+            fetch(`${environment.URL}/api/tutorias/${id}/inscribirse`, {
+              method: 'PUT',
               headers: {
                 'Content-Type':
                   'application/json',
@@ -74,11 +59,19 @@ const TutoriasScreen = ({ navigation, route }) => {
             })
               .then((response) => response.json())
               .then(async (responseJson) => {
-                await loadTutorias();
-                setLoading(false);
+                if (responseJson.suscrito) {
+                  await loadTutorias();
+                  setLoading(false);
+                  Alert.alert(
+                    'Info',
+                    responseJson.message);
+                  return;
+                }
                 Alert.alert(
-                  'Info',
+                  'Error',
                   responseJson.message);
+                setLoading(false);
+
               })
               .catch((error) => {
                 alert(error)
@@ -89,34 +82,6 @@ const TutoriasScreen = ({ navigation, route }) => {
       ],
       { cancelable: false },
     );
-  }
-  const editTutoria = async (id) => {
-    setModalVisible(false);
-    setLoading(true);
-    await AsyncStorage.getItem('id_token').then((val) => token = val);
-    fetch(`${environment.URL}/api/tutorias/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type':
-          'application/json',
-        'X-Requested-With':
-          'XMLHttpRequest',
-        'Authorization':
-          `Bearer ${token}`
-      },
-    })
-      .then((response) => response.json())
-      .then(async (responseJson) => {
-        setLoading(false);
-        navigation.navigate('EditTutoriaScreen', responseJson, { onGoBack: (data) => alert(data) });
-      })
-      .catch((error) => {
-        alert(error)
-        setLoading(false);
-      });
-  }
-  const createTutoria = () => {
-    navigation.navigate('CreateTutoriaScreen');
   }
 
   const showTutorados = (id) => {
@@ -132,7 +97,7 @@ const TutoriasScreen = ({ navigation, route }) => {
     var token;
     await AsyncStorage.getItem('id_token').then((val) => token = val);
     try {
-      fetch(`${environment.URL}/api/mis-tutorias?limit=100&page=1`, {
+      fetch(`${environment.URL}/api/tutorados/tutorias/disponibles?limit=100&page=1`, {
         method: 'GET',
         headers: {
           'Content-Type':
@@ -175,18 +140,6 @@ const TutoriasScreen = ({ navigation, route }) => {
       <ScrollView refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
-        <View style={styles.floatRight}>
-          <Icon
-            name="plus"
-            size={50}
-            color={'#FFFFFF'}
-            backgroundColor="#307ecc"
-            style={styles.buttonStyle}
-            onPress={() => createTutoria()}
-          >
-          </Icon>
-        </View>
-
         {tutorias.length > 0 ?
           tutorias.map(t => (
             <View style={styles.container}>
@@ -221,24 +174,15 @@ const TutoriasScreen = ({ navigation, route }) => {
           }}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Pressable
-                onPress={() => editTutoria(currentTutoria)}>
-                <Text style={[styles.textStyle, styles.textOptions]}>Editar</Text>
-              </Pressable>
               <Card.Divider />
               <Pressable
-                onPress={() => deleteTutoria(currentTutoria)}>
-                <Text style={[styles.textStyle, styles.textOptions]}>Eliminar</Text>
+                onPress={() => suscribeTutoria(currentTutoria)}>
+                <Text style={[styles.textStyle, styles.textOptions]}>Inscribirse</Text>
               </Pressable>
               <Card.Divider />
               <Pressable
                 onPress={() => showTutorados(currentTutoria)}>
-                <Text style={[styles.textStyle, styles.textOptions]}>Ver Lista</Text>
-              </Pressable>
-              <Card.Divider />
-              <Pressable
-                onPress={() => { }}>
-                <Text style={[styles.textStyle, styles.textOptions]}>Asistencias</Text>
+                <Text style={[styles.textStyle, styles.textOptions]}>Ver Alumnos</Text>
               </Pressable>
               <Card.Divider />
               <Pressable
@@ -252,7 +196,7 @@ const TutoriasScreen = ({ navigation, route }) => {
     </SafeAreaView>
   );
 };
-export default TutoriasScreen;
+export default TutoriasDisponiblesScreen;
 
 const styles = StyleSheet.create({
   container: {

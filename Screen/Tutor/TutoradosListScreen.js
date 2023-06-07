@@ -26,7 +26,7 @@ const TutoradosListScreen = ({ navigation, route }) => {
     var token;
     await AsyncStorage.getItem('id_token').then((val) => token = val);
     try {
-      fetch(`${environment.URL}/api/tutorias/${route.params}/tutorados?limit=15&page=1`, {
+      fetch(`${environment.URL}/api/tutorias/${route.params}/tutorados?limit=100&page=1`, {
         method: 'GET',
         headers: {
           'Content-Type':
