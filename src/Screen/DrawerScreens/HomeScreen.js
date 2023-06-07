@@ -1,7 +1,9 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react';
 import { View, Text, SafeAreaView, StyleSheet, Alert } from 'react-native';
+import { Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import jwt_decode from "jwt-decode";
 
 const HomeScreen = () => {
   return (
@@ -15,19 +17,21 @@ const HomeScreen = () => {
           }}>
           <Text
             style={{
-              fontSize: 20,
+              fontSize: 37,
               textAlign: 'center',
               marginBottom: 16,
               color: '#000000'
             }}>
-            Pantalla de tutorias
-
+            Bienvenido a Tuto App
           </Text>
+          <Image source={require('../../../Image/aboutreact.png')}
+            style={{ width: '90%', resizeMode: 'contain', margin: 30 }}>
+          </Image>
         </View>
         <TouchableOpacity
           style={styles.buttonStyle}
           activeOpacity={0.5}
-          onPress={() => AsyncStorage.getItem('id_token').then(value => Alert.alert('JWT', value))}>
+          onPress={() => AsyncStorage.getItem('id_token').then(value => Alert.alert('JWT', JSON.stringify(jwt_decode(value))))}>
           <Text style={styles.buttonTextStyle}>Mostrar JWT</Text>
         </TouchableOpacity>
         <Text

@@ -5,7 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Moment from 'moment';
 import Loader from '../Components/Loader';
 import AsyncStorage from '@react-native-community/async-storage';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 Moment.defineLocale('es', {
   months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),

@@ -15,9 +15,8 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 
 import Loader from './Components/Loader';
-import DrawerNavigatorRoutes from './DrawerNavigationRoutes';
-import { environment } from '../environments/environment';
 import jwt_decode from "jwt-decode";
+import { environment } from '../../environments/environment';
 
 
 const LoginScreen = ({ navigation }) => {
@@ -71,7 +70,7 @@ const LoginScreen = ({ navigation }) => {
       .catch((error) => {
         //Hide Loader
         setLoading(false);
-        console.error(error);
+        console.error('Error conectando al servidor ');
       });
   };
 
@@ -89,7 +88,7 @@ const LoginScreen = ({ navigation }) => {
           <KeyboardAvoidingView enabled>
             <View style={{ alignItems: 'center' }}>
               <Image
-                source={require('../Image/aboutreact.png')}
+                source={require('../../Image/aboutreact.png')}
                 style={{
                   width: '50%',
                   height: 250,

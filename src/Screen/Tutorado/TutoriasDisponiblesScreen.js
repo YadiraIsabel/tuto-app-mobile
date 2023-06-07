@@ -15,15 +15,10 @@ import Icon from 'react-native-vector-icons/Entypo';
 import Loader from '../Components/Loader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
-import Moment from 'moment';
-Moment.defineLocale('es', {
-  months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
-  weekdays: 'Domingo_Lunes_Martes_Miercoles_Jueves_Viernes_Sabado'.split('_'),
-})
 
-const TutoriasSuscritasScreen = ({ navigation, route }) => {
+const TutoriasDisponiblesScreen = ({ navigation, route }) => {
 
 
   const [currentTutoria, setCurrentTutoria] = useState(null);
@@ -34,11 +29,11 @@ const TutoriasSuscritasScreen = ({ navigation, route }) => {
 
 
 
-  const unsuscribeTutoria = (id) => {
+  const suscribeTutoria = (id) => {
     setModalVisible(false);
     Alert.alert(
-      'Abandonar',
-      'Estas seguro de abandonar a la tutoria?',
+      'Inscripción',
+      'Estas seguro de iscribirte a la tutoria?',
       [
         {
           text: 'Cancelar',
@@ -47,11 +42,11 @@ const TutoriasSuscritasScreen = ({ navigation, route }) => {
           },
         },
         {
-          text: 'Abandonar',
+          text: 'Incribirse',
           onPress: async () => {
             setLoading(true);
             await AsyncStorage.getItem('id_token').then((val) => token = val);
-            fetch(`${environment.URL}/api/tutorias/${id}/abandonar`, {
+            fetch(`${environment.URL}/api/tutorias/${id}/inscribirse`, {
               method: 'PUT',
               headers: {
                 'Content-Type':
@@ -64,7 +59,7 @@ const TutoriasSuscritasScreen = ({ navigation, route }) => {
             })
               .then((response) => response.json())
               .then(async (responseJson) => {
-                if (responseJson.unsuscribeted) {
+                if (responseJson.suscrito) {
                   await loadTutorias();
                   setLoading(false);
                   Alert.alert(
@@ -74,62 +69,8 @@ const TutoriasSuscritasScreen = ({ navigation, route }) => {
                 }
                 Alert.alert(
                   'Error',
-                  responseJson.message)
-
-              })
-              .catch((error) => {
-                alert(error)
-                setLoading(false);
-              });
-          },
-        },
-      ],
-      { cancelable: false },
-    );
-  }
-
-  const markAttendance = (id) => {
-    setModalVisible(false);
-    Alert.alert(
-      'Marcar Asistencias',
-      `Quieres marcar asistencia para la tutoria hoy ${Moment(new Date()).format(`dddd D MMMM YYYY`)}?`,
-      [
-        {
-          text: 'Cancelar',
-          onPress: () => {
-            return null;
-          },
-        },
-        {
-          text: 'Marcar Asistencia',
-          onPress: async () => {
-            setLoading(true);
-            await AsyncStorage.getItem('id_token').then((val) => token = val);
-            fetch(`${environment.URL}/api/tutorias/${id}/marcar-asistencias`, {
-              method: 'POST',
-              headers: {
-                'Content-Type':
-                  'application/json',
-                'X-Requested-With':
-                  'XMLHttpRequest',
-                'Authorization':
-                  `Bearer ${token}`
-              },
-            })
-              .then((response) => response.json())
-              .then(async (responseJson) => {
-                setLoading(false);
-                if (responseJson.date) {
-                  Alert.alert(
-                    'Error',
-                    `${responseJson.message} ${Moment(responseJson.date).format('dddd D MMMM YYYY')} `)
-                  return;
-                }
-                await loadTutorias();
-                setLoading(false);
-                Alert.alert(
-                  'Info',
                   responseJson.message);
+                setLoading(false);
 
               })
               .catch((error) => {
@@ -156,7 +97,7 @@ const TutoriasSuscritasScreen = ({ navigation, route }) => {
     var token;
     await AsyncStorage.getItem('id_token').then((val) => token = val);
     try {
-      fetch(`${environment.URL}/api/tutorados/tutorias/mis-tutorias?limit=100&page=1`, {
+      fetch(`${environment.URL}/api/tutorados/tutorias/disponibles?limit=100&page=1`, {
         method: 'GET',
         headers: {
           'Content-Type':
@@ -235,13 +176,8 @@ const TutoriasSuscritasScreen = ({ navigation, route }) => {
             <View style={styles.modalView}>
               <Card.Divider />
               <Pressable
-                onPress={() => markAttendance(currentTutoria)}>
-                <Text style={[styles.textStyle, styles.textOptions]}>Marcar Asistencia</Text>
-              </Pressable>
-              <Card.Divider />
-              <Pressable
-                onPress={() => unsuscribeTutoria(currentTutoria)}>
-                <Text style={[styles.textStyle, styles.textOptions]}>Abandonar</Text>
+                onPress={() => suscribeTutoria(currentTutoria)}>
+                <Text style={[styles.textStyle, styles.textOptions]}>Inscribirse</Text>
               </Pressable>
               <Card.Divider />
               <Pressable
@@ -260,7 +196,7 @@ const TutoriasSuscritasScreen = ({ navigation, route }) => {
     </SafeAreaView>
   );
 };
-export default TutoriasSuscritasScreen;
+export default TutoriasDisponiblesScreen;
 
 const styles = StyleSheet.create({
   container: {

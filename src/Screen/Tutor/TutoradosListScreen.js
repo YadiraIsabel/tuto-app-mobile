@@ -12,7 +12,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../Components/Loader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RefreshControl, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 
 const TutoradosListScreen = ({ navigation, route }) => {

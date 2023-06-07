@@ -7,12 +7,12 @@ import React from 'react';
 // Import Navigators from React Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import LoginScreen from './src/Screen/LoginScreen';
+import RegisterScreen from './src/Screen/RegisterScreen';
+import SplashScreen from './src/Screen/SplashScreen';
+import DrawerNavigationRoutes from './src/Screen/DrawerNavigationRoutes';
 
 // Import Screens
-import SplashScreen from './Screen/SplashScreen';
-import LoginScreen from './Screen/LoginScreen';
-import RegisterScreen from './Screen/RegisterScreen';
-import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
 
 const Stack = createStackNavigator();
 

@@ -16,9 +16,12 @@ import NavigationDrawerHeader from './Components/NavigationDrawerHeader';
 import EditTutoriaScreen from './Tutor/EditTutoriaScreen';
 import CreateTutoriaScreen from './Tutor/CreateTutoriaScreen';
 import TutoradosListScreen from './Tutor/TutoradosListScreen';
-import { environment } from '../environments/environment';
 import TutoriasDisponiblesScreen from './Tutorado/TutoriasDisponiblesScreen';
 import TutoriasSuscritasScreen from './Tutorado/TutoriasSuscritasScreen';
+import { environment } from '../../environments/environment';
+import NoticiasScreen from './Notificador/NoticiasScreen';
+import CreateNoticiaScreen from './Notificador/CreateNoticiaScreen';
+import EditNoticiaScreen from './Notificador/EditNoticiaScreen';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -30,7 +33,7 @@ const HomeScreenStack = ({ navigation }) => {
         name="HomeScreen"
         component={HomeScreen}
         options={{
-          title: 'Home', //Set Header Title
+          title: 'Inicio', //Set Header Title
           headerLeft: () => (
             <NavigationDrawerHeader navigation={navigation} />
           ),
@@ -160,7 +163,46 @@ const TutoriasSuscritasScreenStack = ({ navigation }) => {
     </Stack.Navigator>
   );
 };
-
+const GestionNoticiasScreenStack = ({ navigation }) => {
+  return (
+    <Stack.Navigator
+      initialRouteName="NoticiasScreen"
+      screenOptions={{
+        headerLeft: () => (
+          <NavigationDrawerHeader navigation={navigation} />
+        ),
+        headerStyle: {
+          backgroundColor: '#307ecc', //Set Header color
+        },
+        headerTintColor: '#fff', //Set Header text color
+        headerTitleStyle: {
+          fontWeight: 'bold', //Set Header text style
+        },
+      }}>
+      <Stack.Screen
+        name="NoticiasScreen"
+        component={NoticiasScreen}
+        options={{
+          title: 'Gestion de noticias', //Set Header Title
+        }}
+      />
+      <Stack.Screen
+        name="CreateNoticiaScreen"
+        component={CreateNoticiaScreen}
+        options={{
+          title: 'Crear Noticia', //Set Header Title
+        }}
+      />
+      <Stack.Screen
+        name="EditNoticiaScreen"
+        component={EditNoticiaScreen}
+        options={{
+          title: 'Editar Noticia', //Set Header Title
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
 
 
 const DrawerNavigatorRoutes = (props) => {
@@ -217,6 +259,31 @@ const DrawerNavigatorRoutes = (props) => {
             name="TutoriasSuscritasScreenStack"
             options={{ drawerLabel: 'Mis Tutorias' }}
             component={TutoriasSuscritasScreenStack}
+          />
+        </Drawer.Navigator>
+      );
+    case environment.NOTIFICADOR_SCOPE:
+      return (
+        <Drawer.Navigator
+          drawerContentOptions={{
+            activeTintColor: '#cee1f2',
+            color: '#cee1f2',
+            itemStyle: { marginVertical: 5, color: 'white' },
+            labelStyle: {
+              color: '#d8d8d8',
+            },
+          }}
+          screenOptions={{ headerShown: false }}
+          drawerContent={CustomSidebarMenu}>
+          <Drawer.Screen
+            name="HomeScreenStack"
+            options={{ drawerLabel: 'Inicio' }}
+            component={HomeScreenStack}
+          />
+          <Drawer.Screen
+            name="GestionNoticiasScreenStack"
+            options={{ drawerLabel: 'Gestion de noticias' }}
+            component={GestionNoticiasScreenStack}
           />
         </Drawer.Navigator>
       );

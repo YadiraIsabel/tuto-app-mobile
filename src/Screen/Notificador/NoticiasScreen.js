@@ -10,30 +10,48 @@ import {
   Alert,
 } from 'react-native';
 
-import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/Entypo';
 import Loader from '../Components/Loader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
-import { environment } from '../../environments/environment';
+import DeleteNewUseCase from '../../domain/usecase/DeleteNewUseCase';
+import GetNewUseCase from '../../domain/usecase/GetNewUseCase';
+import GetAllNewsUseCase from '../../domain/usecase/GetAllNewsUseCase';
+import Moment from 'moment';
 
+Moment.defineLocale('es', {
+  months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
+  weekdays: 'Domingo_Lunes_Martes_Miercoles_Jueves_Viernes_Sabado'.split('_'),
+})
 
-const TutoriasDisponiblesScreen = ({ navigation, route }) => {
-
-
-  const [currentTutoria, setCurrentTutoria] = useState(null);
+const NoticiasScreen = ({ navigation, route }) => {
+  const [currentNoticia, setCurrentNoticia] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [tutorias, setTutorias] = useState([]);
+  const [noticias, setNoticias] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
 
+  if (route.params) {
+    if (route.params.noticia.updated) {
+      setNoticias(noticias.map(t => {
+        let id = route.params.noticia.id;
+        if (t.id === id) {
+          t.nombre = route.params.noticia.nombre;
+        }
+        return t;
+      }));
+    } else {
+      noticias.push(route.params.noticia)
+      setNoticias(noticias);
+    }
+    route.params = null;
+  }
 
-
-  const suscribeTutoria = (id) => {
+  const deleteNoticia = async (id) => {
     setModalVisible(false);
     Alert.alert(
-      'Inscripción',
-      'Estas seguro de iscribirte a la tutoria?',
+      'Eliminar',
+      'Estas seguro de eliminar la noticia?',
       [
         {
           text: 'Cancelar',
@@ -42,126 +60,90 @@ const TutoriasDisponiblesScreen = ({ navigation, route }) => {
           },
         },
         {
-          text: 'Incribirse',
+          text: 'Eliminar',
           onPress: async () => {
             setLoading(true);
-            await AsyncStorage.getItem('id_token').then((val) => token = val);
-            fetch(`${environment.URL}/api/tutorias/${id}/inscribirse`, {
-              method: 'PUT',
-              headers: {
-                'Content-Type':
-                  'application/json',
-                'X-Requested-With':
-                  'XMLHttpRequest',
-                'Authorization':
-                  `Bearer ${token}`
-              },
-            })
-              .then((response) => response.json())
-              .then(async (responseJson) => {
-                if (responseJson.suscrito) {
-                  await loadTutorias();
-                  setLoading(false);
-                  Alert.alert(
-                    'Info',
-                    responseJson.message);
-                  return;
-                }
-                Alert.alert(
-                  'Error',
-                  responseJson.message);
-                setLoading(false);
-
-              })
-              .catch((error) => {
-                alert(error)
-                setLoading(false);
-              });
+            await DeleteNewUseCase.dispatch(id);
+            Alert.alert(
+              'Info',
+              'Noticia eliminada correctamente');
+            loadNoticias();
+            setLoading(false)
           },
         },
       ],
       { cancelable: false },
     );
   }
-
-  const showTutorados = (id) => {
-    setModalVisible(false)
-    navigation.navigate('TutoradosListScreen', id);
+  const editNoticia = async (id) => {
+    setModalVisible(false);
+    setLoading(true);
+    const response = await GetNewUseCase.dispatch(id);
+    setLoading(false);
+    navigation.navigate('EditNoticiaScreen', response);
   }
-  const loadTutoriaOptions = (id) => {
-    setCurrentTutoria(id)
+  const createNoticia = () => {
+    navigation.navigate('CreateNoticiaScreen');
+  }
+  const loadNoticiaOptions = (id) => {
+    setCurrentNoticia(id)
     setModalVisible(true)
   }
-  const loadTutorias = async () => {
+  const loadNoticias = async () => {
     setLoading(true);
-    var token;
-    await AsyncStorage.getItem('id_token').then((val) => token = val);
-    try {
-      fetch(`${environment.URL}/api/tutorados/tutorias/disponibles?limit=100&page=1`, {
-        method: 'GET',
-        headers: {
-          'Content-Type':
-            'application/json',
-          'X-Requested-With':
-            'XMLHttpRequest',
-          'Authorization':
-            `Bearer ${token}`
-        },
-      })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          setTutorias(responseJson.data)
-          setLoading(false);
-        })
-        .catch((error) => {
-          setLoading(false);
-          alert(error)
-        });
-    } catch (error) {
-      Alert.alert('Error', 'Error a stablecer conexión con el servidor');
-    }
+    const response = await GetAllNewsUseCase.dispatch();
+    setNoticias(response)
+    setLoading(false);
   }
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    loadTutorias();
+    loadNoticias();
     setRefreshing(false);
   }, []);
 
-
   useEffect(() => {
-    loadTutorias();
+    loadNoticias();
   }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Loader loading={loading} />
-
       <ScrollView refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
-        {tutorias.length > 0 ?
-          tutorias.map(t => (
+        <View style={styles.floatRight}>
+          <Icon
+            name="plus"
+            size={50}
+            color={'#FFFFFF'}
+            backgroundColor="#307ecc"
+            style={styles.buttonStyle}
+            onPress={() => createNoticia()}
+          >
+          </Icon>
+        </View>
+        {noticias && noticias.length > 0 ?
+          noticias.map(n => (
             <View style={styles.container}>
-              <Card key={t.nombre}>
-                <Card.Title>{t.nombre}</Card.Title>
+              <Card key={n.id}>
+                <Card.Title>{n.nombre}</Card.Title>
                 <Card.Divider />
                 <View style={styles.floatRight}>
                   <Icon.Button
                     name="dots-three-horizontal"
                     color={'#000000'}
                     backgroundColor="#FFFFFF"
-                    onPress={() => { loadTutoriaOptions(t.id) }}>
+                    onPress={() => { loadNoticiaOptions(n.id) }}>
                   </Icon.Button>
                   <Text style={styles.fonts}>
-                    No.Alumnos {t.tutorados_count}
+                    Creada el {Moment(n.fechaPublicacion).format(`dddd D MMMM YYYY`)}{ }
                   </Text>
-
                 </View>
               </Card>
             </View>
           )
-          ) : (<Text style={[styles.textStyle, { marginTop: 340 }]}>No hay Tutorias Disponibles</Text>)
+          ) : (<Text style={[styles.textStyle, { marginTop: 340 }]}>No hay Noticias Disponibles</Text>)
         }
       </ScrollView>
       <View style={styles.centeredView}>
@@ -174,15 +156,14 @@ const TutoriasDisponiblesScreen = ({ navigation, route }) => {
           }}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Card.Divider />
               <Pressable
-                onPress={() => suscribeTutoria(currentTutoria)}>
-                <Text style={[styles.textStyle, styles.textOptions]}>Inscribirse</Text>
+                onPress={() => editNoticia(currentNoticia)}>
+                <Text style={[styles.textStyle, styles.textOptions]}>Editar</Text>
               </Pressable>
               <Card.Divider />
               <Pressable
-                onPress={() => showTutorados(currentTutoria)}>
-                <Text style={[styles.textStyle, styles.textOptions]}>Ver Alumnos</Text>
+                onPress={() => deleteNoticia(currentNoticia)}>
+                <Text style={[styles.textStyle, styles.textOptions]}>Eliminar</Text>
               </Pressable>
               <Card.Divider />
               <Pressable
@@ -196,7 +177,7 @@ const TutoriasDisponiblesScreen = ({ navigation, route }) => {
     </SafeAreaView>
   );
 };
-export default TutoriasDisponiblesScreen;
+export default NoticiasScreen;
 
 const styles = StyleSheet.create({
   container: {
