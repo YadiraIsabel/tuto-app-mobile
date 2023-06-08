@@ -22,6 +22,7 @@ import { environment } from '../../environments/environment';
 import NoticiasScreen from './Notificador/NoticiasScreen';
 import CreateNoticiaScreen from './Notificador/CreateNoticiaScreen';
 import EditNoticiaScreen from './Notificador/EditNoticiaScreen';
+import NoticiasListScreen from './Notificador/NoticiasListScreen';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -203,6 +204,46 @@ const GestionNoticiasScreenStack = ({ navigation }) => {
     </Stack.Navigator>
   );
 };
+const ListaNoticiasScreenStack = ({ navigation }) => {
+  return (
+    <Stack.Navigator
+      initialRouteName="NoticiasListScreen"
+      screenOptions={{
+        headerLeft: () => (
+          <NavigationDrawerHeader navigation={navigation} />
+        ),
+        headerStyle: {
+          backgroundColor: '#307ecc', //Set Header color
+        },
+        headerTintColor: '#fff', //Set Header text color
+        headerTitleStyle: {
+          fontWeight: 'bold', //Set Header text style
+        },
+      }}>
+      <Stack.Screen
+        name="NoticiasListScreen"
+        component={NoticiasListScreen}
+        options={{
+          title: 'Gestion de noticias', //Set Header Title
+        }}
+      />
+      <Stack.Screen
+        name="CreateNoticiaScreen"
+        component={CreateNoticiaScreen}
+        options={{
+          title: 'Crear Noticia', //Set Header Title
+        }}
+      />
+      <Stack.Screen
+        name="EditNoticiaScreen"
+        component={EditNoticiaScreen}
+        options={{
+          title: 'Editar Noticia', //Set Header Title
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
 
 
 const DrawerNavigatorRoutes = (props) => {
@@ -229,6 +270,11 @@ const DrawerNavigatorRoutes = (props) => {
             name="TutoriasScreenStack"
             options={{ drawerLabel: 'Tutorias' }}
             component={TutoriasScreenStack}
+          />
+          <Drawer.Screen
+            name="ListaNoticiasScreenStack"
+            options={{ drawerLabel: 'Noticias' }}
+            component={ListaNoticiasScreenStack}
           />
         </Drawer.Navigator>
       );
@@ -260,6 +306,11 @@ const DrawerNavigatorRoutes = (props) => {
             options={{ drawerLabel: 'Mis Tutorias' }}
             component={TutoriasSuscritasScreenStack}
           />
+          <Drawer.Screen
+            name="ListaNoticiasScreenStack"
+            options={{ drawerLabel: 'Noticias' }}
+            component={ListaNoticiasScreenStack}
+          />
         </Drawer.Navigator>
       );
     case environment.NOTIFICADOR_SCOPE:
@@ -285,9 +336,13 @@ const DrawerNavigatorRoutes = (props) => {
             options={{ drawerLabel: 'Gestion de noticias' }}
             component={GestionNoticiasScreenStack}
           />
+          <Drawer.Screen
+            name="ListaNoticiasScreenStack"
+            options={{ drawerLabel: 'Noticias' }}
+            component={ListaNoticiasScreenStack}
+          />
         </Drawer.Navigator>
       );
-
   }
 
 };
