@@ -9,6 +9,5 @@ const NewRepository = {
     store: async (nNew) => await addDoc(collection(db, TABLE_NEWS), nNew),
     update: async (id, tNew) => await setDoc(doc(db, TABLE_NEWS, id), tNew, MERGE_OPTION),
     delete: async (id) => await deleteDoc(doc(db, TABLE_NEWS, id))
-
 }
 export default NewRepository;

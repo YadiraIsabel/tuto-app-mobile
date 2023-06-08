@@ -1,8 +1,4 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
-
-// Import React and Component
-import React, {useState, createRef} from 'react';
+import React, { useState, createRef } from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -13,10 +9,12 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   ScrollView,
+  Pressable,
 } from 'react-native';
 
 import Loader from './Components/Loader';
 import { environment } from '../../environments/environment';
+import RadioButton from './Components/RadioButton';
 
 const RegisterScreen = (props) => {
   const [userName, setUserName] = useState('');
@@ -24,6 +22,7 @@ const RegisterScreen = (props) => {
   const [userPassword, setUserPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [loading, setLoading] = useState(false);
+  const [tutorado, setTutorado] = useState(true);
   const [errortext, setErrortext] = useState('');
   const [
     isRegistraionSuccess,
@@ -58,7 +57,7 @@ const RegisterScreen = (props) => {
       );
       return;
     }
-    
+
     if (!passwordConfirmation) {
       Alert.alert(
         'Error',
@@ -72,9 +71,10 @@ const RegisterScreen = (props) => {
       name: userName,
       email: userEmail,
       password: userPassword,
-      password_confirmation: passwordConfirmation
+      password_confirmation: passwordConfirmation,
+      type: tutorado ? environment.TUTORADO_SCOPE : environment.TUTOR_SCOPE,
     };
-    
+
 
     fetch(`${environment.URL}/api/auth/signup`, {
       method: 'POST',
@@ -94,9 +94,6 @@ const RegisterScreen = (props) => {
         // If server response message same as Data Matched
         if (responseJson.status === 'success') {
           setIsRegistraionSuccess(true);
-          console.log(
-            'Registration Successful. Please Login to proceed'
-          );
         } else {
           setErrortext(responseJson.message);
         }
@@ -130,13 +127,13 @@ const RegisterScreen = (props) => {
           style={styles.buttonStyle}
           activeOpacity={0.5}
           onPress={() => props.navigation.navigate('LoginScreen')}>
-          <Text style={styles.buttonTextStyle}>Login Now</Text>
+          <Text style={styles.buttonTextStyle}>Iniciar Sesión</Text>
         </TouchableOpacity>
       </View>
     );
   }
   return (
-    <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       <Loader loading={loading} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -144,7 +141,7 @@ const RegisterScreen = (props) => {
           justifyContent: 'center',
           alignContent: 'center',
         }}>
-        <View style={{alignItems: 'center'}}>
+        <View style={{ alignItems: 'center' }}>
           <Image
             source={require('../../Image/aboutreact.png')}
             style={{
@@ -226,6 +223,18 @@ const RegisterScreen = (props) => {
               blurOnSubmit={false}
             />
           </View>
+          <View style={styles.SectionStyle}>
+            <View style={styles.blockRadioButton}>
+              <Pressable onPress={() => setTutorado(true)} style={styles.blockRadioButton}>
+                <RadioButton selected={tutorado} />
+                <Text style={[styles.textBlack, { marginLeft: 12 }]}>Tutorado</Text>
+              </Pressable>
+              <Pressable onPress={() => setTutorado(false)} style={[styles.blockRadioButton, { marginLeft: 15 }]}>
+                <RadioButton selected={!tutorado} />
+                <Text style={[styles.textBlack, { marginLeft: 12 }]}>Tutor</Text>
+              </Pressable>
+            </View>
+          </View>
           {errortext != '' ? (
             <Text style={styles.errorTextStyle}>
               {errortext}
@@ -245,6 +254,14 @@ const RegisterScreen = (props) => {
 export default RegisterScreen;
 
 const styles = StyleSheet.create({
+  blockRadioButton: {
+    flexDirection: 'row',
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  textBlack: {
+    color: 'black'
+  },
   SectionStyle: {
     flexDirection: 'row',
     height: 40,

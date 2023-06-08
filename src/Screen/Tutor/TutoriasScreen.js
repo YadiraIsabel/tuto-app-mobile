@@ -123,6 +123,11 @@ const TutoriasScreen = ({ navigation, route }) => {
     setModalVisible(false)
     navigation.navigate('TutoradosListScreen', id);
   }
+  
+  const showAsistencias = (id) => {
+    setModalVisible(false)
+    navigation.navigate('AsistenciaScreen', id);
+  }
   const loadTutoriaOptions = (id) => {
     setCurrentTutoria(id)
     setModalVisible(true)
@@ -237,7 +242,7 @@ const TutoriasScreen = ({ navigation, route }) => {
               </Pressable>
               <Card.Divider />
               <Pressable
-                onPress={() => { }}>
+                onPress={() => showAsistencias(currentTutoria)}>
                 <Text style={[styles.textStyle, styles.textOptions]}>Asistencias</Text>
               </Pressable>
               <Card.Divider />

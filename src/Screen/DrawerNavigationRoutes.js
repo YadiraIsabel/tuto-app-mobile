@@ -23,6 +23,7 @@ import NoticiasScreen from './Notificador/NoticiasScreen';
 import CreateNoticiaScreen from './Notificador/CreateNoticiaScreen';
 import EditNoticiaScreen from './Notificador/EditNoticiaScreen';
 import NoticiasListScreen from './Notificador/NoticiasListScreen';
+import AsistenciaScreen from './Tutor/AsistenciaScreen';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -93,6 +94,13 @@ const TutoriasScreenStack = ({ navigation }) => {
         component={TutoradosListScreen}
         options={{
           title: 'Listado De Tutorados', //Set Header Title
+        }}
+      />
+      <Stack.Screen
+        name="AsistenciaScreen"
+        component={AsistenciaScreen}
+        options={{
+          title: 'Asistencia de la tutoria', //Set Header Title
         }}
       />
     </Stack.Navigator>
