@@ -223,7 +223,7 @@ const ListaNoticiasScreenStack = ({ navigation }) => {
         name="NoticiasListScreen"
         component={NoticiasListScreen}
         options={{
-          title: 'Gestion de noticias', //Set Header Title
+          title: 'Noticias', //Set Header Title
         }}
       />
       <Stack.Screen

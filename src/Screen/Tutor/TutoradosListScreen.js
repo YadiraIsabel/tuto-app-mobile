@@ -67,7 +67,7 @@ const TutoradosListScreen = ({ navigation, route }) => {
               style={styles.inputStyle}
               onChangeText={(data) => setSearch(data)}
               underlineColorAndroid="#f000"
-              placeholder="Ingresa para buscar tutoria"
+              placeholder="Ingresa para buscar el tutorado"
               placeholderTextColor="gray"
               autoCapitalize="sentences"
               returnKeyType="next"

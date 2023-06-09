@@ -13,7 +13,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/Entypo';
 import Loader from '../Components/Loader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
+import { RefreshControl, ScrollView, TextInput } from 'react-native-gesture-handler';
 import Moment from 'moment';
 import { environment } from '../../../environments/environment';
 
@@ -28,6 +28,7 @@ const TutoriasSuscritasScreen = ({ navigation, route }) => {
   const [tutorias, setTutorias] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [search, setSearch] = useState('');
   const unsuscribeTutoria = (id) => {
     setModalVisible(false);
     Alert.alert(
@@ -143,12 +144,12 @@ const TutoriasSuscritasScreen = ({ navigation, route }) => {
     setCurrentTutoria(id)
     setModalVisible(true)
   }
-  const loadTutorias = async () => {
+  const loadTutorias = async (data) => {
     setLoading(true);
     var token;
     await AsyncStorage.getItem('id_token').then((val) => token = val);
     try {
-      fetch(`${environment.URL}/api/tutorados/tutorias/mis-tutorias?limit=100&page=1`, {
+      fetch(`${environment.URL}/api/tutorados/tutorias/mis-tutorias?limit=100&page=1&search=${data != undefined ? data : search}`, {
         method: 'GET',
         headers: {
           'Content-Type':
@@ -183,10 +184,47 @@ const TutoriasSuscritasScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Loader loading={loading} />
-
       <ScrollView refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
+        <View>
+          <View>
+            <TextInput
+              style={styles.inputStyle}
+              onChangeText={(data) => setSearch(data)}
+              underlineColorAndroid="#f000"
+              placeholder="Ingresa para buscar tutoria"
+              placeholderTextColor="gray"
+              autoCapitalize="sentences"
+              returnKeyType="next"
+              blurOnSubmit={false}
+              value={search}
+            />
+          </View>
+          <View>
+            <View style={styles.row}>
+              <Icon
+                name="magnifying-glass"
+                size={50}
+                color={'#FFFFFF'}
+                style={[styles.buttonStyle, { backgroundColor: '#868d90' }]}
+                disabled={search == ''}
+                onPress={() => loadTutorias()}
+              >
+              </Icon>
+              <Icon
+                name="eraser"
+                size={50}
+                color={'#FFFFFF'}
+                backgroundColor="#307ecc"
+                disabled={search == ''}
+                style={[styles.buttonStyle, { backgroundColor: '#f29100' }]}
+                onPress={() => { setSearch(''); loadTutorias('') }}
+              >
+              </Icon>
+            </View>
+          </View>
+        </View>
         {tutorias.length > 0 ?
           tutorias.map(t => (
             <View style={styles.container}>
@@ -332,5 +370,44 @@ const styles = StyleSheet.create({
   },
   floatRight: {
     alignItems: 'flex-end'
-  }
+  },
+  floatRight: {
+    alignItems: 'flex-end'
+  },
+  floatLeft: {
+    alignItems: 'flex-start'
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  buttonStyle: {
+    backgroundColor: '#307ecc',
+    borderWidth: 0,
+    borderColor: '#7DE24E',
+    height: 50,
+    width: 50,
+    alignItems: 'center',
+    borderRadius: 30,
+    marginLeft: 35,
+    marginRight: 35,
+    marginTop: 20,
+    marginBottom: 4,
+  },
+  inputStyle: {
+    flex: 1,
+    color: 'black',
+    paddingLeft: 15,
+    paddingRight: 10,
+    borderWidth: 1,
+    borderRadius: 30,
+    borderColor: '#dadae8',
+    backgroundColor: 'white',
+    alignItems: 'center',
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 20,
+    marginBottom: 4,
+  },
 });
