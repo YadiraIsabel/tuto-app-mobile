@@ -8,6 +8,7 @@ import {
 } from '@react-navigation/drawer';
 
 import AsyncStorage from '@react-native-community/async-storage';
+import ClearTokenUseCase from '../../domain/usecase/session/ClearTokenUseCase';
 
 const CustomSidebarMenu = (props) => {
   return (
@@ -46,7 +47,7 @@ const CustomSidebarMenu = (props) => {
                 {
                   text: 'Cerrar Sesión',
                   onPress: () => {
-                    AsyncStorage.clear();
+                    ClearTokenUseCase.dispatch();
                     props.navigation.replace('Auth');
                   },
                 },

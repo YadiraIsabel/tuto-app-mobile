@@ -18,7 +18,7 @@ import { withAnchorPoint } from "./utils/anchor-point";
 import Loader from '../Components/Loader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
-import GetAllNewsUseCase from '../../domain/usecase/GetAllNewsUseCase';
+import GetAllNewsUseCase from '../../domain/usecase/news/GetAllNewsUseCase';
 
 const PAGE_WIDTH = window.width;
 const PAGE_HEIGHT = window.width * 1.2;

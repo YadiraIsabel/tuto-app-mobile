@@ -3,7 +3,7 @@ import { View, Text, SafeAreaView, StyleSheet, Alert, KeyboardAvoidingView, Text
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Loader from '../Components/Loader';
 import Moment from 'moment';
-import UpdateNewUseCase from '../../domain/usecase/UpdateNewUseCase';
+import UpdateNewUseCase from '../../domain/usecase/news/UpdateNewUseCase';
 
 Moment.defineLocale('es', {
   months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),

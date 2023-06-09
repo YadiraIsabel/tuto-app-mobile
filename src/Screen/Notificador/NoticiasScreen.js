@@ -13,10 +13,10 @@ import Icon from 'react-native-vector-icons/Entypo';
 import Loader from '../Components/Loader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
-import DeleteNewUseCase from '../../domain/usecase/DeleteNewUseCase';
-import GetNewUseCase from '../../domain/usecase/GetNewUseCase';
-import GetAllNewsUseCase from '../../domain/usecase/GetAllNewsUseCase';
 import Moment from 'moment';
+import DeleteNewUseCase from '../../domain/usecase/news/DeleteNewUseCase';
+import GetNewUseCase from '../../domain/usecase/news/GetNewUseCase';
+import GetAllNewsUseCase from '../../domain/usecase/news/GetAllNewsUseCase';
 
 Moment.defineLocale('es', {
   months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),

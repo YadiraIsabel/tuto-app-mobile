@@ -1,4 +1,4 @@
-import NewRepository from "../../infra/db/repository/NewRepository";
+import NewRepository from "../../../infra/db/repository/NewRepository";
 
 const UpdateNewUseCase = {
     dispatch: async (id, data) => {

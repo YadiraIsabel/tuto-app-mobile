@@ -1,5 +1,4 @@
-import NewRepository from "../../infra/db/repository/NewRepository";
-import NoticiaMapper from "../mapper/NoticiaMapper";
+import NewRepository from "../../../infra/db/repository/NewRepository";
 
 const SaveNewUseCase = {
     dispatch: async (data) => {

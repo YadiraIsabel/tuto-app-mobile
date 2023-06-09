@@ -14,6 +14,7 @@ import {
 import Loader from './Components/Loader';
 import { environment } from '../../environments/environment';
 import RadioButton from './Components/RadioButton';
+import RegisterUseCase from '../domain/usecase/auth/RegisterUseCase';
 
 const RegisterScreen = (props) => {
   const [userName, setUserName] = useState('');
@@ -27,7 +28,7 @@ const RegisterScreen = (props) => {
   const emailInputRef = createRef();
   const passwordInputRef = createRef();
   const passwordConfirmationInputRef = createRef();
-  const handleSubmitButton = () => {
+  const handleSubmitButton = async () => {
     setErrortext('');
     if (!userName) {
       Alert.alert(
@@ -57,7 +58,7 @@ const RegisterScreen = (props) => {
       );
       return;
     }
-    setLoading(true);
+
     var dataToSend = {
       name: userName,
       email: userEmail,
@@ -65,33 +66,18 @@ const RegisterScreen = (props) => {
       password_confirmation: passwordConfirmation,
       type: tutorado ? environment.TUTORADO_SCOPE : environment.TUTOR_SCOPE,
     };
-    fetch(`${environment.URL}/api/auth/signup`, {
-      method: 'POST',
-      body: JSON.stringify(dataToSend),
-      headers: {
-        'Content-Type':
-          'application/json',
-        'X-Requested-With':
-          'XMLHttpRequest'
-      },
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        //Hide Loader
-        setLoading(false);
-        console.log(responseJson);
-        // If server response message same as Data Matched
-        if (responseJson.status === 'success') {
-          setIsRegistraionSuccess(true);
-        } else {
-          setErrortext(responseJson.message);
-        }
-      })
-      .catch((error) => {
-        //Hide Loader
-        setLoading(false);
-        console.error(error);
-      });
+    setLoading(true);
+    let response = await RegisterUseCase.dispatch(dataToSend);
+    if (response.status === 201) {
+      alert(response.body.message)
+      setIsRegistraionSuccess(true);
+    } else {
+      var errors = '';
+      Object.keys(response.body.errors)
+        .forEach((k, index) => errors += `${index + 1}.-${response.body.errors[k][0]}\n`);
+      setErrortext(errors);
+    }
+    setLoading(false);
   };
   if (isRegistraionSuccess) {
     return (

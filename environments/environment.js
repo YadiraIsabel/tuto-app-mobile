@@ -3,6 +3,8 @@ export const environment = {
     TUTOR_SCOPE: 'tutor',
     TUTORADO_SCOPE: 'tutorado',
     NOTIFICADOR_SCOPE: 'notificador',
+    APP_LOAD_DELAY: 5000,
+    TOKEN_FIELD: 'id_token',
     FIREBASE_CONFIG: {
         apiKey: "AIzaSyBK16awFSWBtgmuhjJrNzCjhLgaUkmyOW8",
         authDomain: "react-native-database-76e2e.firebaseapp.com",

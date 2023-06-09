@@ -1,5 +1,5 @@
-import NewRepository from "../../infra/db/repository/NewRepository";
-import NoticiaMapper from "../mapper/NoticiaMapper";
+import NewRepository from "../../../infra/db/repository/NewRepository";
+import NoticiaMapper from "../../mapper/NoticiaMapper";
 
 const GetAllNewsUseCase = {
     dispatch: async () => {
@@ -9,7 +9,7 @@ const GetAllNewsUseCase = {
             news.forEach(n => newsMapped.push(NoticiaMapper.apply(n)));
             return newsMapped;
         } catch (error) {
-            alert('Error obteniendo as noticias', error);
+            alert(`Error obteniendo as noticias: ${error}`);
         }
     }
 }

@@ -15,6 +15,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from './Components/Loader';
 import jwt_decode from "jwt-decode";
 import { environment } from '../../environments/environment';
+import LoginUseCase from '../domain/usecase/auth/LoginUseCase';
+import PersistTokenUseCase from '../domain/usecase/session/PersistTokenUseCase';
+import GetTokenUseCase from '../domain/usecase/session/GetTokenUseCase';
 
 const LoginScreen = ({ navigation }) => {
   const [userEmail, setUserEmail] = useState('');
@@ -22,7 +25,7 @@ const LoginScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
   const passwordInputRef = createRef();
-  const handleSubmitPress = () => {
+  const handleSubmitPress = async () => {
     setErrortext('');
     if (!userEmail) {
       Alert.alert(
@@ -38,35 +41,24 @@ const LoginScreen = ({ navigation }) => {
       );
       return;
     }
+
     setLoading(true);
     let dataToSend = { email: userEmail, password: userPassword, remember_me: false };
-    fetch(`${environment.URL}/api/auth/login`, {
-      method: 'POST',
-      body: JSON.stringify(dataToSend),
-      headers: {
-        'Content-Type':
-          'application/json',
-        'X-Requested-With':
-          'XMLHttpRequest'
-      },
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        //Hide Loader
-        setLoading(false);
-        if (responseJson.access_token) {
-          AsyncStorage.setItem('id_token', responseJson.access_token);
-          navigation.replace('DrawerNavigationRoutes', jwt_decode(responseJson.access_token).scopes[0]);
-        } else {
-          setErrortext(responseJson.message);
-          console.error('Please check your email id or password');
-        }
-      })
-      .catch((error) => {
-        //Hide Loader
-        setLoading(false);
-        console.error('Error conectando al servidor ');
-      });
+    let response = await LoginUseCase.dispatch(dataToSend);
+    if (response.status === 200) {
+      await PersistTokenUseCase.dispatch(response.body.access_token);
+      navigation.replace('DrawerNavigationRoutes', jwt_decode(response.body.access_token).scopes[0]);
+    } else {
+      if (response.body.errors) {
+        var errors = '';
+        Object.keys(response.body.errors)
+          .forEach((k, index) => errors += `${index + 1}.-${response.body.errors[k][0]}\n`);
+        setErrortext(errors);
+      } else {
+        setErrortext(response.body.message);
+      }
+    }
+    setLoading(false);
   };
   return (
     <View style={styles.mainBody}>

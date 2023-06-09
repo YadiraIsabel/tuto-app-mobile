@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
+import { environment } from '../../environments/environment';
 
 const SplashScreen = ({ navigation }) => {
   const [animating, setAnimating] = useState(true);
@@ -14,13 +15,14 @@ const SplashScreen = ({ navigation }) => {
     setTimeout(() => {
       setAnimating(false);
       AsyncStorage.clear();
-      AsyncStorage.getItem('id_token').then((value) =>
+      AsyncStorage.getItem(environment.TOKEN_FIELD).then((value) =>
         navigation.replace(
           value === null ? 'Auth' : 'DrawerNavigationRoutes'
         ),
       );
-    }, 3000);
+    }, environment.APP_LOAD_DELAY);
   }, []);
+
   return (
     <View style={styles.container}>
       <Image
