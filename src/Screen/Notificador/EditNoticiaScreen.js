@@ -223,5 +223,4 @@ const styles = StyleSheet.create({
     padding: 30,
   },
 });
-
 export default EditNoticiaScreen;

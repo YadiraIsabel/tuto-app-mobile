@@ -9,7 +9,6 @@ import {
   Modal,
   Alert,
 } from 'react-native';
-
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/Entypo';
 import Loader from '../Components/Loader';
@@ -17,18 +16,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import { environment } from '../../../environments/environment';
 
-
 const TutoriasDisponiblesScreen = ({ navigation, route }) => {
-
-
   const [currentTutoria, setCurrentTutoria] = useState(null);
   const [loading, setLoading] = useState(false);
   const [tutorias, setTutorias] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
-
-
-
   const suscribeTutoria = (id) => {
     setModalVisible(false);
     Alert.alert(
@@ -83,7 +76,6 @@ const TutoriasDisponiblesScreen = ({ navigation, route }) => {
       { cancelable: false },
     );
   }
-
   const showTutorados = (id) => {
     setModalVisible(false)
     navigation.navigate('TutoradosListScreen', id);
@@ -121,25 +113,19 @@ const TutoriasDisponiblesScreen = ({ navigation, route }) => {
       Alert.alert('Error', 'Error a stablecer conexión con el servidor');
     }
   }
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     loadTutorias();
     setRefreshing(false);
   }, []);
-
-
   useEffect(() => {
     loadTutorias();
   }, []);
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Loader loading={loading} />
-
       <ScrollView refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }>
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         {tutorias.length > 0 ?
           tutorias.map(t => (
             <View style={styles.container}>
@@ -156,7 +142,6 @@ const TutoriasDisponiblesScreen = ({ navigation, route }) => {
                   <Text style={styles.fonts}>
                     No.Alumnos {t.tutorados_count}
                   </Text>
-
                 </View>
               </Card>
             </View>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card } from '@rneui/themed';
 import {
@@ -18,14 +17,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import { environment } from '../../../environments/environment';
 
-
 const TutoriasScreen = ({ navigation, route }) => {
   const [currentTutoria, setCurrentTutoria] = useState(null);
   const [loading, setLoading] = useState(false);
   const [tutorias, setTutorias] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [search, setSearch] = useState(false);
+  const [search, setSearch] = useState('');
 
   if (route.params && route.params.tutoria) {
     if (route.params.tutoria.created) {
@@ -42,7 +40,6 @@ const TutoriasScreen = ({ navigation, route }) => {
     }
     route.params = null;
   }
-
   const deleteTutoria = (id) => {
     setModalVisible(false);
     Alert.alert(
@@ -117,12 +114,10 @@ const TutoriasScreen = ({ navigation, route }) => {
   const createTutoria = () => {
     navigation.navigate('CreateTutoriaScreen');
   }
-
   const showTutorados = (id) => {
     setModalVisible(false)
     navigation.navigate('TutoradosListScreen', id);
   }
-
   const showAsistencias = (id) => {
     setModalVisible(false)
     navigation.navigate('AsistenciaScreen', id);
@@ -131,12 +126,12 @@ const TutoriasScreen = ({ navigation, route }) => {
     setCurrentTutoria(id)
     setModalVisible(true)
   }
-  const loadTutorias = async () => {
+  const loadTutorias = async (data) => {
     setLoading(true);
     var token;
     await AsyncStorage.getItem('id_token').then((val) => token = val);
     try {
-      fetch(`${environment.URL}/api/mis-tutorias?limit=100&page=1`, {
+      fetch(`${environment.URL}/api/mis-tutorias?limit=100&page=1&search=${data != undefined ? data : search}`, {
         method: 'GET',
         headers: {
           'Content-Type':
@@ -160,14 +155,11 @@ const TutoriasScreen = ({ navigation, route }) => {
       Alert.alert('Error', 'Error a stablecer conexión con el servidor');
     }
   }
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     loadTutorias();
     setRefreshing(false);
   }, []);
-
-
   useEffect(() => {
     loadTutorias();
   }, []);
@@ -175,37 +167,56 @@ const TutoriasScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Loader loading={loading} />
-
       <ScrollView refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
-        <View style={styles.row}>
-          <View style={styles.floatLeft}>
+        <View>
+          <View>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={(nombre) => setTutoria({ ...tutoria, nombre })}
+              onChangeText={(data) => setSearch(data)}
               underlineColorAndroid="#f000"
               placeholder="Ingresa para buscar tutoria"
               placeholderTextColor="gray"
               autoCapitalize="sentences"
               returnKeyType="next"
               blurOnSubmit={false}
+              value={search}
             />
-
           </View>
-          <View style={styles.floatRight}>
-            <Icon
-              name="plus"
-              size={50}
-              color={'#FFFFFF'}
-              backgroundColor="#307ecc"
-              style={styles.buttonStyle}
-              onPress={() => createTutoria()}
-            >
-            </Icon>
+          <View>
+            <View style={styles.row}>
+              <Icon
+                name="plus"
+                size={50}
+                color={'#FFFFFF'}
+                backgroundColor="#307ecc"
+                style={styles.buttonStyle}
+                onPress={() => createTutoria()}
+              >
+              </Icon>
+              <Icon
+                name="magnifying-glass"
+                size={50}
+                color={'#FFFFFF'}
+                disabled={search == ''}
+                style={[styles.buttonStyle, { backgroundColor: '#868d90' }]}
+                onPress={() => loadTutorias()}
+              >
+              </Icon>
+              <Icon
+                name="eraser"
+                size={50}
+                color={'#FFFFFF'}
+                disabled={search == ''}
+                backgroundColor="#307ecc"
+                style={[styles.buttonStyle, { backgroundColor: '#f29100' }]}
+                onPress={() => { setSearch(''); loadTutorias('') }}
+              >
+              </Icon>
+            </View>
           </View>
         </View>
-
         {tutorias.length > 0 ?
           tutorias.map(t => (
             <View style={styles.container}>
@@ -267,7 +278,7 @@ const TutoriasScreen = ({ navigation, route }) => {
           </View>
         </Modal>
       </View>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 };
 export default TutoriasScreen;
@@ -368,13 +379,14 @@ const styles = StyleSheet.create({
     flex: 1,
     color: 'black',
     paddingLeft: 15,
-    paddingRight: 15,
+    paddingRight: 10,
     borderWidth: 1,
     borderRadius: 30,
     borderColor: '#dadae8',
     backgroundColor: 'white',
     alignItems: 'center',
     marginLeft: 20,
+    marginRight: 20,
     marginTop: 20,
     marginBottom: 4,
   },

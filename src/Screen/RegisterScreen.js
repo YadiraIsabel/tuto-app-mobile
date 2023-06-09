@@ -11,7 +11,6 @@ import {
   ScrollView,
   Pressable,
 } from 'react-native';
-
 import Loader from './Components/Loader';
 import { environment } from '../../environments/environment';
 import RadioButton from './Components/RadioButton';
@@ -24,15 +23,10 @@ const RegisterScreen = (props) => {
   const [loading, setLoading] = useState(false);
   const [tutorado, setTutorado] = useState(true);
   const [errortext, setErrortext] = useState('');
-  const [
-    isRegistraionSuccess,
-    setIsRegistraionSuccess
-  ] = useState(false);
-
+  const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
   const emailInputRef = createRef();
   const passwordInputRef = createRef();
   const passwordConfirmationInputRef = createRef();
-
   const handleSubmitButton = () => {
     setErrortext('');
     if (!userName) {
@@ -49,7 +43,6 @@ const RegisterScreen = (props) => {
       );
       return;
     }
-
     if (!userPassword) {
       Alert.alert(
         'Error',
@@ -57,7 +50,6 @@ const RegisterScreen = (props) => {
       );
       return;
     }
-
     if (!passwordConfirmation) {
       Alert.alert(
         'Error',
@@ -65,7 +57,6 @@ const RegisterScreen = (props) => {
       );
       return;
     }
-    //Show Loader
     setLoading(true);
     var dataToSend = {
       name: userName,
@@ -74,8 +65,6 @@ const RegisterScreen = (props) => {
       password_confirmation: passwordConfirmation,
       type: tutorado ? environment.TUTORADO_SCOPE : environment.TUTOR_SCOPE,
     };
-
-
     fetch(`${environment.URL}/api/auth/signup`, {
       method: 'POST',
       body: JSON.stringify(dataToSend),

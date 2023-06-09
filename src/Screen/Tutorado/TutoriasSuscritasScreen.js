@@ -9,31 +9,25 @@ import {
   Modal,
   Alert,
 } from 'react-native';
-
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/Entypo';
 import Loader from '../Components/Loader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
-
 import Moment from 'moment';
 import { environment } from '../../../environments/environment';
+
 Moment.defineLocale('es', {
   months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
   weekdays: 'Domingo_Lunes_Martes_Miercoles_Jueves_Viernes_Sabado'.split('_'),
 })
 
 const TutoriasSuscritasScreen = ({ navigation, route }) => {
-
-
   const [currentTutoria, setCurrentTutoria] = useState(null);
   const [loading, setLoading] = useState(false);
   const [tutorias, setTutorias] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
-
-
-
   const unsuscribeTutoria = (id) => {
     setModalVisible(false);
     Alert.alert(
@@ -87,7 +81,6 @@ const TutoriasSuscritasScreen = ({ navigation, route }) => {
       { cancelable: false },
     );
   }
-
   const markAttendance = (id) => {
     setModalVisible(false);
     Alert.alert(
@@ -142,7 +135,6 @@ const TutoriasSuscritasScreen = ({ navigation, route }) => {
       { cancelable: false },
     );
   }
-
   const showTutorados = (id) => {
     setModalVisible(false)
     navigation.navigate('TutoradosListScreen', id);
@@ -180,18 +172,14 @@ const TutoriasSuscritasScreen = ({ navigation, route }) => {
       Alert.alert('Error', 'Error a stablecer conexión con el servidor');
     }
   }
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     loadTutorias();
     setRefreshing(false);
   }, []);
-
-
   useEffect(() => {
     loadTutorias();
   }, []);
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Loader loading={loading} />
@@ -215,7 +203,6 @@ const TutoriasSuscritasScreen = ({ navigation, route }) => {
                   <Text style={styles.fonts}>
                     No.Alumnos {t.tutorados_count}
                   </Text>
-
                 </View>
               </Card>
             </View>

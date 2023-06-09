@@ -1,14 +1,11 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-
-
 const SButton = (props) => {
   const { children, visible = true, onPress } = props;
 
   if (!visible)
     return <></>;
-
   return (
     <View
       style={{

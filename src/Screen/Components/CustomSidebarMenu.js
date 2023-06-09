@@ -1,9 +1,5 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
-
-// Import React and Component
 import React from 'react';
-import {View, Text, Alert, StyleSheet} from 'react-native';
+import { View, Text, Alert, StyleSheet } from 'react-native';
 
 import {
   DrawerContentScrollView,
@@ -18,7 +14,7 @@ const CustomSidebarMenu = (props) => {
     <View style={stylesSidebar.sideMenuContainer}>
       <View style={stylesSidebar.profileHeader}>
         <View style={stylesSidebar.profileHeaderPicCircle}>
-          <Text style={{fontSize: 25, color: '#000000'}}>
+          <Text style={{ fontSize: 25, color: '#000000' }}>
             {'Usuario'.charAt(0)}
           </Text>
         </View>
@@ -27,12 +23,11 @@ const CustomSidebarMenu = (props) => {
         </Text>
       </View>
       <View style={stylesSidebar.profileHeaderLine} />
-
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
         <DrawerItem
-          label={({color}) => 
-            <Text style={{color: '#000000'}}>
+          label={({ color }) =>
+            <Text style={{ color: '#000000' }}>
               Cerrar Sesión
             </Text>
           }
@@ -56,7 +51,7 @@ const CustomSidebarMenu = (props) => {
                   },
                 },
               ],
-              {cancelable: false},
+              { cancelable: false },
             );
           }}
         />
@@ -64,7 +59,6 @@ const CustomSidebarMenu = (props) => {
     </View>
   );
 };
-
 
 const stylesSidebar = StyleSheet.create({
   sideMenuContainer: {

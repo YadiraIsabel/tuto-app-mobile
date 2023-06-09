@@ -11,20 +11,16 @@ import {
   KeyboardAvoidingView,
   Alert
 } from 'react-native';
-
 import AsyncStorage from '@react-native-community/async-storage';
-
 import Loader from './Components/Loader';
 import jwt_decode from "jwt-decode";
 import { environment } from '../../environments/environment';
-
 
 const LoginScreen = ({ navigation }) => {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
-
   const passwordInputRef = createRef();
   const handleSubmitPress = () => {
     setErrortext('');
@@ -44,7 +40,6 @@ const LoginScreen = ({ navigation }) => {
     }
     setLoading(true);
     let dataToSend = { email: userEmail, password: userPassword, remember_me: false };
-
     fetch(`${environment.URL}/api/auth/login`, {
       method: 'POST',
       body: JSON.stringify(dataToSend),
@@ -61,7 +56,7 @@ const LoginScreen = ({ navigation }) => {
         setLoading(false);
         if (responseJson.access_token) {
           AsyncStorage.setItem('id_token', responseJson.access_token);
-          navigation.replace('DrawerNavigationRoutes',jwt_decode(responseJson.access_token).scopes[0]);
+          navigation.replace('DrawerNavigationRoutes', jwt_decode(responseJson.access_token).scopes[0]);
         } else {
           setErrortext(responseJson.message);
           console.error('Please check your email id or password');
@@ -73,7 +68,6 @@ const LoginScreen = ({ navigation }) => {
         console.error('Error conectando al servidor ');
       });
   };
-
   return (
     <View style={styles.mainBody}>
       <Loader loading={loading} />

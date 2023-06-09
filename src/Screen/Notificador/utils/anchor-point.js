@@ -1,13 +1,8 @@
-import { TransformsStyle } from "react-native";
-
-
 const isValidSize = (size) => {
     "worklet";
     return size && size.width > 0 && size.height > 0;
 };
-
 const defaultAnchorPoint = { x: 0.5, y: 0.5 };
-
 export const withAnchorPoint = (
     transform,
     anchorPoint,
@@ -35,7 +30,6 @@ export const withAnchorPoint = (
             translateX: size.width * (defaultAnchorPoint.x - anchorPoint.x),
         });
     }
-
     if (!Array.isArray(injectedTransform))
         return { transform: injectedTransform };
 
@@ -51,6 +45,5 @@ export const withAnchorPoint = (
             translateY: size.height * (defaultAnchorPoint.y - anchorPoint.y),
         });
     }
-
     return { transform: injectedTransform };
 };

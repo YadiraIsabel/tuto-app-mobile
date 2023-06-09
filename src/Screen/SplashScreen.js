@@ -1,7 +1,3 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
-
-// Import React and Component
 import React, { useState, useEffect } from 'react';
 import {
   ActivityIndicator,
@@ -13,26 +9,18 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 
 const SplashScreen = ({ navigation }) => {
-  //State for ActivityIndicator animation
-
   const [animating, setAnimating] = useState(true);
-
   useEffect(() => {
     setTimeout(() => {
       setAnimating(false);
-      //Check if id_token is set or not
-      //If not then send for Authentication
-      //else send to Home Screen
       AsyncStorage.clear();
-
       AsyncStorage.getItem('id_token').then((value) =>
         navigation.replace(
           value === null ? 'Auth' : 'DrawerNavigationRoutes'
         ),
       );
-    }, 10);
+    }, 3000);
   }, []);
-
   return (
     <View style={styles.container}>
       <Image

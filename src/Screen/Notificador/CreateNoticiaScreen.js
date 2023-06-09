@@ -13,7 +13,6 @@ Moment.defineLocale('es', {
 const CreateNoticiaScreen = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [noticia, setNoticia] = useState({ name: '', description: '', creator: '' });
-
   const storeNoticia = async () => {
     if (!noticia.name) {
       Alert.alert(
@@ -221,5 +220,4 @@ const styles = StyleSheet.create({
     padding: 30,
   },
 });
-
 export default CreateNoticiaScreen;

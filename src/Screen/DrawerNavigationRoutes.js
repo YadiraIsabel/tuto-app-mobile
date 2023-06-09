@@ -1,14 +1,6 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
-
-// Import React
 import React from 'react';
-
-// Import Navigators from React Navigation
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-
-// Import Screens
 import HomeScreen from './DrawerScreens/HomeScreen';
 import TutoriasScreen from './Tutor/TutoriasScreen';
 import CustomSidebarMenu from './Components/CustomSidebarMenu';
@@ -24,9 +16,9 @@ import CreateNoticiaScreen from './Notificador/CreateNoticiaScreen';
 import EditNoticiaScreen from './Notificador/EditNoticiaScreen';
 import NoticiasListScreen from './Notificador/NoticiasListScreen';
 import AsistenciaScreen from './Tutor/AsistenciaScreen';
+
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
-
 const HomeScreenStack = ({ navigation }) => {
 
   return (
@@ -51,7 +43,6 @@ const HomeScreenStack = ({ navigation }) => {
     </Stack.Navigator>
   );
 };
-
 const TutoriasScreenStack = ({ navigation }) => {
   return (
     <Stack.Navigator
@@ -252,8 +243,6 @@ const ListaNoticiasScreenStack = ({ navigation }) => {
     </Stack.Navigator>
   );
 };
-
-
 const DrawerNavigatorRoutes = (props) => {
   switch (props.route.params) {
     case environment.TUTOR_SCOPE:
@@ -352,7 +341,6 @@ const DrawerNavigatorRoutes = (props) => {
         </Drawer.Navigator>
       );
   }
-
 };
 
 export default DrawerNavigatorRoutes;

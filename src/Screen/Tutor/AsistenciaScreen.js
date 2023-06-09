@@ -21,38 +21,30 @@ const AsistenciaScreen = ({ navigation, route }) => {
   const [fin, setFin] = useState('');
   const [errortext, setErrortext] = useState('');
   const [refreshing, setRefreshing] = useState(false);
-
   const [isDatePickerInicioVisible, setDatePickerInicioVisibility] = useState(false);
   const [isDatePickerFinVisible, setDatePickerFinVisibility] = useState(false);
-
   const showDatePickerInicio = () => {
     setDatePickerInicioVisibility(true);
   };
-
   const hideDatePickerInicio = () => {
     setDatePickerInicioVisibility(false);
   };
-
   const handleConfirmInicio = (date) => {
     let inicio = Moment(date).format('yyyy-MM-DD');
     setInicio(inicio);
     hideDatePickerInicio();
   };
-
   const showDatePickerFin = () => {
     setDatePickerFinVisibility(true);
   };
-
   const hideDatePickerFin = () => {
     setDatePickerFinVisibility(false);
   };
-
   const handleConfirmFin = (date) => {
     let fin = Moment(date).format('yyyy-MM-DD');
     setFin(fin);
     hideDatePickerFin();
   };
-
   const consultAsistencia = async (id) => {
     setErrortext('');
     if (!inicio) {
@@ -88,7 +80,6 @@ const AsistenciaScreen = ({ navigation, route }) => {
         setLoading(false);
       });
   }
-
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     consultAsistencia();
@@ -149,7 +140,6 @@ const AsistenciaScreen = ({ navigation, route }) => {
                 onCancel={hideDatePickerFin}
               />
             </View>
-
             {errortext != '' ? (
               <Text style={styles.errorTextStyle}>
                 {errortext}

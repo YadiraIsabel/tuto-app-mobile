@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
@@ -13,29 +12,24 @@ import Animated, {
 } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 import Moment from 'moment';
-
 import SButton from "../Components/SButton";
 import { window, getRandomColor } from "../Notificador/constants";
 import { withAnchorPoint } from "./utils/anchor-point";
-
-
-const PAGE_WIDTH = window.width;
-const PAGE_HEIGHT = window.width * 1.2;
-
 import Loader from '../Components/Loader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import GetAllNewsUseCase from '../../domain/usecase/GetAllNewsUseCase';
 
+const PAGE_WIDTH = window.width;
+const PAGE_HEIGHT = window.width * 1.2;
+
 const NoticiasListScreen = ({ navigation, route }) => {
   const [isAutoPlay, setIsAutoPlay] = React.useState(false);
-
   const baseOptions = {
     vertical: false,
     width: PAGE_WIDTH,
     height: PAGE_HEIGHT,
   };
-
   const [noticias, setNoticias] = useState([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -45,13 +39,11 @@ const NoticiasListScreen = ({ navigation, route }) => {
     setNoticias(response)
     setLoading(false);
   }
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     loadNoticias();
     setRefreshing(false);
   }, []);
-
   useEffect(() => {
     loadNoticias();
   }, []);
@@ -111,7 +103,6 @@ const NoticiasListScreen = ({ navigation, route }) => {
 const Card = ({ index, animationValue, noticias }) => {
   const WIDTH = PAGE_WIDTH / 1.3;
   const HEIGHT = PAGE_HEIGHT / 1.2;
-
   const cardStyle = useAnimatedStyle(() => {
     const scale = interpolate(
       animationValue.value,
@@ -119,13 +110,11 @@ const Card = ({ index, animationValue, noticias }) => {
       [0.95, 1, 1],
       Extrapolate.CLAMP,
     );
-
     const translateX = interpolate(
       animationValue.value,
       [-1, -0.2, 0, 1],
       [0, WIDTH * 0.3, 0, 0],
     );
-
     const transform = {
       transform: [
         { scale },
@@ -141,7 +130,6 @@ const Card = ({ index, animationValue, noticias }) => {
         },
       ],
     };
-
     return {
       ...withAnchorPoint(
         transform,
@@ -150,26 +138,22 @@ const Card = ({ index, animationValue, noticias }) => {
       ),
     };
   }, [index]);
-
   const blockStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       animationValue.value,
       [-1, 0, 1],
       [0, 60, 90],
     );
-
     const translateY = interpolate(
       animationValue.value,
       [-1, 0, 1],
       [0, -40, -40],
     );
-
     const rotateZ = interpolate(
       animationValue.value,
       [-1, 0, 1],
       [0, 0, -25],
     );
-
     return {
       transform: [
         { translateX },
@@ -178,15 +162,13 @@ const Card = ({ index, animationValue, noticias }) => {
       ],
     };
   }, [index]);
-
   return (
     <Animated.View
       style={{
         flex: 1,
         justifyContent: "flex-start",
         alignItems: "center",
-      }}
-    >
+      }}>
       <Animated.View
         style={[
           {
@@ -208,8 +190,7 @@ const Card = ({ index, animationValue, noticias }) => {
             elevation: 16,
           },
           cardStyle,
-        ]}
-      />
+        ]} />
       <View style={[
         {
           marginTop: 50,
@@ -219,8 +200,7 @@ const Card = ({ index, animationValue, noticias }) => {
           alignItems: "flex-start",
           position: "absolute",
           zIndex: 999,
-        },
-      ]}>
+        },]}>
         <View >
           <Text style={styles.textTitle}>{noticias[index].nombre}{'\n'}</Text>
           <Text style={styles.textContent}> {noticias[index].descripcion}{'\n'}</Text>

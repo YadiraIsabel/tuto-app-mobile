@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card } from '@rneui/themed';
 import {
@@ -30,7 +29,6 @@ const NoticiasScreen = ({ navigation, route }) => {
   const [noticias, setNoticias] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
-
   if (route.params) {
     if (route.params.noticia.updated) {
       setNoticias(noticias.map(t => {
@@ -46,7 +44,6 @@ const NoticiasScreen = ({ navigation, route }) => {
     }
     route.params = null;
   }
-
   const deleteNoticia = async (id) => {
     setModalVisible(false);
     Alert.alert(
@@ -95,17 +92,14 @@ const NoticiasScreen = ({ navigation, route }) => {
     setNoticias(response)
     setLoading(false);
   }
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     loadNoticias();
     setRefreshing(false);
   }, []);
-
   useEffect(() => {
     loadNoticias();
   }, []);
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Loader loading={loading} />

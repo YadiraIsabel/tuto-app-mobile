@@ -16,38 +16,30 @@ const EditTutoriaScreen = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [tutoria, setTutoria] = useState(route.params);
   const [errortext, setErrortext] = useState('');
-
   const [isDatePickerInicioVisible, setDatePickerInicioVisibility] = useState(false);
   const [isDatePickerFinVisible, setDatePickerFinVisibility] = useState(false);
-
   const showDatePickerInicio = () => {
     setDatePickerInicioVisibility(true);
   };
-
   const hideDatePickerInicio = () => {
     setDatePickerInicioVisibility(false);
   };
-
   const handleConfirmInicio = (date) => {
     let inicio = Moment(date).format('yyyy-MM-DD');
     setTutoria({ ...tutoria, inicio });
     hideDatePickerInicio();
   };
-
   const showDatePickerFin = () => {
     setDatePickerFinVisibility(true);
   };
-
   const hideDatePickerFin = () => {
     setDatePickerFinVisibility(false);
   };
-
   const handleConfirmFin = (date) => {
     let fin = Moment(date).format('yyyy-MM-DD');
     setTutoria({ ...tutoria, fin });
     hideDatePickerFin();
   };
-
   const updateTutoria = async (id) => {
     setErrortext('');
     setLoading(true);
@@ -136,7 +128,6 @@ const EditTutoriaScreen = ({ navigation, route }) => {
                 onCancel={hideDatePickerFin}
               />
             </View>
-
             {errortext != '' ? (
               <Text style={styles.errorTextStyle}>
                 {errortext}
