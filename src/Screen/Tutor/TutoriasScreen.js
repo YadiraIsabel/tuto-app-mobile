@@ -8,7 +8,7 @@ import {
   View,
   Modal,
   Alert,
-  TouchableOpacity
+  TextInput
 } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -20,13 +20,12 @@ import { environment } from '../../../environments/environment';
 
 
 const TutoriasScreen = ({ navigation, route }) => {
-
-
   const [currentTutoria, setCurrentTutoria] = useState(null);
   const [loading, setLoading] = useState(false);
   const [tutorias, setTutorias] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [search, setSearch] = useState(false);
 
   if (route.params && route.params.tutoria) {
     if (route.params.tutoria.created) {
@@ -123,7 +122,7 @@ const TutoriasScreen = ({ navigation, route }) => {
     setModalVisible(false)
     navigation.navigate('TutoradosListScreen', id);
   }
-  
+
   const showAsistencias = (id) => {
     setModalVisible(false)
     navigation.navigate('AsistenciaScreen', id);
@@ -180,16 +179,31 @@ const TutoriasScreen = ({ navigation, route }) => {
       <ScrollView refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
-        <View style={styles.floatRight}>
-          <Icon
-            name="plus"
-            size={50}
-            color={'#FFFFFF'}
-            backgroundColor="#307ecc"
-            style={styles.buttonStyle}
-            onPress={() => createTutoria()}
-          >
-          </Icon>
+        <View style={styles.row}>
+          <View style={styles.floatLeft}>
+            <TextInput
+              style={styles.inputStyle}
+              onChangeText={(nombre) => setTutoria({ ...tutoria, nombre })}
+              underlineColorAndroid="#f000"
+              placeholder="Ingresa para buscar tutoria"
+              placeholderTextColor="gray"
+              autoCapitalize="sentences"
+              returnKeyType="next"
+              blurOnSubmit={false}
+            />
+
+          </View>
+          <View style={styles.floatRight}>
+            <Icon
+              name="plus"
+              size={50}
+              color={'#FFFFFF'}
+              backgroundColor="#307ecc"
+              style={styles.buttonStyle}
+              onPress={() => createTutoria()}
+            >
+            </Icon>
+          </View>
         </View>
 
         {tutorias.length > 0 ?
@@ -208,7 +222,6 @@ const TutoriasScreen = ({ navigation, route }) => {
                   <Text style={styles.fonts}>
                     No.Alumnos {t.tutorados_count}
                   </Text>
-
                 </View>
               </Card>
             </View>
@@ -342,5 +355,27 @@ const styles = StyleSheet.create({
   },
   floatRight: {
     alignItems: 'flex-end'
-  }
+  },
+  floatLeft: {
+    alignItems: 'flex-start'
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  inputStyle: {
+    flex: 1,
+    color: 'black',
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderWidth: 1,
+    borderRadius: 30,
+    borderColor: '#dadae8',
+    backgroundColor: 'white',
+    alignItems: 'center',
+    marginLeft: 20,
+    marginTop: 20,
+    marginBottom: 4,
+  },
 });
